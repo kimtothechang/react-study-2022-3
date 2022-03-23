@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 
 const EmotionCard = ({
@@ -19,7 +20,7 @@ const EmotionCard = ({
   );
 };
 
-export default EmotionCard;
+export default React.memo(EmotionCard);
 
 const Wrapper = styled.div`
   cursor: pointer;

@@ -29,6 +29,7 @@ const Title = styled.div`
   width: 50%;
   font-size: 25px;
   justify-content: center;
+  font-family: "Nanum Pen Script";
 `;
 
 const LeftBtn = styled.div`

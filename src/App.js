@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useReducer, useRef } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import New from "./pages/New";
@@ -18,6 +18,7 @@ const reducer = (state, action) => {
     }
     case "REMOVE": {
       newState = state.filter((it) => it.id !== action.targetId);
+      break;
     }
     case "EDIT": {
       newState = state.map((it) =>
@@ -28,6 +29,8 @@ const reducer = (state, action) => {
     default:
       return state;
   }
+
+  localStorage.setItem("diary", JSON.stringify(newState));
   return newState;
 };
 
@@ -45,37 +48,43 @@ const dummyData = [
     id: 2,
     emotion: 2,
     content: "No.2 Diary",
-    date: 1647560205925,
+    date: 1647560205926,
   },
   {
     id: 3,
     emotion: 3,
     content: "No.3 Diary",
-    date: 1647560205924,
+    date: 1647560205927,
   },
   {
     id: 4,
     emotion: 4,
     content: "No.4 Diary",
-    date: 1647560205923,
+    date: 1647560205928,
   },
   {
     id: 5,
     emotion: 5,
     content: "No.5 Diary",
-    date: 1647560205922,
-  },
-  {
-    id: 6,
-    emotion: 5,
-    content: "No.6 Diary",
-    date: 1650560205921,
+    date: 1647560205929,
   },
 ];
 
 function App() {
-  const [data, dispatch] = useReducer(reducer, dummyData);
+  const [data, dispatch] = useReducer(reducer, []);
   const dataId = useRef(0);
+
+  useEffect(() => {
+    const localData = localStorage.getItem("diary");
+    if (localData) {
+      const diaryList = JSON.parse(localData).sort(
+        (a, b) => parseInt(b.id) - parseInt(a.id)
+      );
+      dataId.current = parseInt(diaryList[0].id + 1, 10);
+
+      dispatch({ type: "INIT", data: diaryList });
+    }
+  }, []);
 
   // CREATE
   const onCreate = (date, content, emotion) => {
@@ -127,7 +136,7 @@ function App() {
 
 export default App;
 
-const AppWrapper = styled.div`
+const AppWrapper = styled.main`
   @import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Yeon+Sung&display=swap");
 
   font-family: "Nanum Pen Script", cursive;

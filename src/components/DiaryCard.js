@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
 import Button from "./Button";
@@ -30,7 +31,7 @@ const DiaryCard = ({ id, emotion, content, date }) => {
   );
 };
 
-export default DiaryCard;
+export default React.memo(DiaryCard);
 
 const Article = styled.div`
   display: flex;
