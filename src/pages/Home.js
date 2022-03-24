@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { DiaryStateContext } from "../App";
+import styled from "styled-components";
 
 import Header from "../components/Header";
 import Button from "../components/Button";

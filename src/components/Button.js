@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import React from "react";
 
 const Button = ({ text, type, onClick }) => {
   const btnType = ["positive", "negative"].includes(type) ? type : "default";
@@ -14,7 +15,7 @@ Button.defaultProps = {
   type: "default",
 };
 
-export default Button;
+export default React.memo(Button);
 
 const MyButton = styled.button`
   cursor: pointer;

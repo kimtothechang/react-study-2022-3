@@ -1,4 +1,10 @@
-import { useContext, useEffect, useRef, useState, useCallback } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 
@@ -20,10 +26,13 @@ const DiaryEditor = ({ isEdit, originData }) => {
   const { onCreate, onEdit, onRemove } = useContext(DiaryDispatchContext);
 
   const handleClickEmotion = useCallback((emotion) => {
+    console.log("use setEmotion");
     setEmotion(emotion);
   }, []);
 
   const handleSubmit = () => {
+    console.log("use handleSubmit");
+    console.log(content.length);
     if (content.length < 1) {
       contentRef.current.focus();
       return;
@@ -34,7 +43,7 @@ const DiaryEditor = ({ isEdit, originData }) => {
       )
     ) {
       if (!isEdit) {
-        onCreate(new Date().getTime(), content, emotion);
+        onCreate(date, content, emotion);
       } else {
         onEdit(originData.id, date, content, emotion);
       }
@@ -43,10 +52,16 @@ const DiaryEditor = ({ isEdit, originData }) => {
   };
 
   const handleRemove = () => {
+    console.log("use onRemove");
     if (window.confirm("정말 삭제하시겠습니까?")) {
       onRemove(originData.id);
       navigate("/", { replace: true });
     }
+  };
+
+  const goBack = () => {
+    console.log("use goBack");
+    return navigate(-1);
   };
 
   useEffect(() => {
@@ -54,68 +69,73 @@ const DiaryEditor = ({ isEdit, originData }) => {
       setDate(getStringDate(new Date(parseInt(originData.date, 10))));
       setEmotion(originData.emotion);
       setContent(originData.content);
+      console.log("use useEffect is Edit True");
     }
   }, [isEdit, originData]);
 
   return (
     <Section>
-      <Div>
-        <Header
-          headText={isEdit ? "일기 수정하기 " : "새 일기 쓰기"}
-          leftChild={
-            <Button text={"< 뒤로가기"} onClick={() => navigate(-1)} />
-          }
-          rightChild={
-            isEdit && (
-              <Button
-                text={"삭제하기"}
-                type={"negative"}
-                onClick={handleRemove}
-              />
-            )
-          }
-        />
-        <DateWrapper>
-          <H4>오늘은 언제인가요?</H4>
-          <DateInput
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            type="date"
-          />
-        </DateWrapper>
-      </Div>
-      <Div>
-        <H4>오늘의 감정</H4>
-        <EmotionWrapper>
-          {emotionList.map((it) => (
-            <EmotionCard
-              key={it.emotion_id}
-              {...it}
-              onClick={handleClickEmotion}
-              isSelected={it.emotion_id === emotion}
+      <Header
+        headText={isEdit ? "일기 수정하기 " : "새 일기 쓰기"}
+        leftChild={<Button text={"< 뒤로가기"} onClick={goBack} />}
+        rightChild={
+          isEdit && (
+            <Button
+              text={"삭제하기"}
+              type={"negative"}
+              onClick={handleRemove}
             />
-          ))}
-        </EmotionWrapper>
-      </Div>
-      <Div>
-        <H4>오늘의 일기</H4>
-        <TextArea
-          ref={contentRef}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder={"오늘은 어떤 하루였나요"}
-        ></TextArea>
-      </Div>
-      <Div>
-        <ControlWrapper>
-          <Button text={"취소하기"} onClick={() => navigate(-1)} />
-          <Button
-            text={"작성완료"}
-            type={"positive"}
-            onClick={() => handleSubmit()}
-          />
-        </ControlWrapper>
-      </Div>
+          )
+        }
+      />
+      <div>
+        <Div>
+          <DateWrapper>
+            <H4>오늘은 언제인가요?</H4>
+            <div>
+              <DateInput
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                type="date"
+              />
+            </div>
+          </DateWrapper>
+        </Div>
+        <Div>
+          <H4>오늘의 감정</H4>
+          <EmotionWrapper>
+            {emotionList.map((it) => (
+              <EmotionCard
+                key={it.emotion_id}
+                {...it}
+                onClick={handleClickEmotion}
+                isSelected={it.emotion_id === emotion}
+              />
+            ))}
+          </EmotionWrapper>
+        </Div>
+        <Div>
+          <H4>오늘의 일기</H4>
+          <div>
+            <TextArea
+              ref={contentRef}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder={"오늘은 어떤 하루였나요"}
+            ></TextArea>
+          </div>
+        </Div>
+        <Div>
+          <ControlWrapper>
+            <Button text={"취소하기"} onClick={goBack} />
+            <Button
+              text={"작성완료"}
+              type={"positive"}
+              onClick={handleSubmit}
+            />
+          </ControlWrapper>
+        </Div>
+      </div>
     </Section>
   );
 };

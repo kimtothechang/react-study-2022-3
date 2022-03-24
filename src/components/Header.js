@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import React from "react";
 
-const Header = ({ headText, leftChild, rightChild }) => {
+const Header = React.memo(({ headText, leftChild, rightChild }) => {
   return (
     <MyHeader>
       <SrOnly>일기장</SrOnly>
@@ -9,7 +10,7 @@ const Header = ({ headText, leftChild, rightChild }) => {
       <RightBtn>{rightChild}</RightBtn>
     </MyHeader>
   );
-};
+});
 
 export default Header;
 
